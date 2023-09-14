@@ -24,18 +24,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
-
         return authService.login(loginDTO);
     }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return authService.refreshToken(refreshTokenRequest.getRefreshToken());
-    }
-
-    @GetMapping("/logout/{user_id}")
-    public ResponseEntity<?> logout(@Valid @PathVariable Long user_id){
-
-        return authService.logout(user_id);
     }
 }

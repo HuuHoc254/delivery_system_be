@@ -13,22 +13,30 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private JWTFilter jwtFilter;
+    private final JWTFilter jwtFilter;
 
-    @Autowired
-    private UserDetailServiceImpl userDetailsService;
+    private final UserDetailServiceImpl userDetailsService;
 
-    @Autowired
-    private JWTAuthenticationEntryPoint unauthorizedHandler;
+    private final JWTAuthenticationEntryPoint unauthorizedHandler;
+
+    private final LogoutHandler logoutHandler;
+
+    public SecurityConfig(JWTFilter jwtFilter, UserDetailServiceImpl userDetailsService, JWTAuthenticationEntryPoint unauthorizedHandler, LogoutHandler logoutHandler) {
+        this.jwtFilter = jwtFilter;
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.logoutHandler = logoutHandler;
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -57,9 +65,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                     auth.requestMatchers("/api/v1/auth/**").permitAll();
                     auth.requestMatchers("/api/v1/test/**").permitAll();
+                    auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 })
-                .authenticationProvider(authenticationProvider());
+                .authenticationProvider(authenticationProvider())
+                .logout((logout) ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext())));
 
         http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
         return http.build();

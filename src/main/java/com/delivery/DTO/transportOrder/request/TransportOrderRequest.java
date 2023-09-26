@@ -12,8 +12,7 @@ import java.util.List;
 public class TransportOrderRequest {
     private String orderNumber;
     private LocalDateTime orderDate;
-    private String pickupAddress;
-    private String deliveryAddress;
+    private TransportAddressRequest transportAddress;
     private Double totalAmount;
     private Boolean paymentStatus;
     private List<TransportOrderDetailRequest> transportOrderDetailRequests;

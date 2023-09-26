@@ -2,11 +2,13 @@ package com.delivery.model.transportOrder;
 
 import com.delivery.entity.TransportOrderDetailEntity;
 import com.delivery.entity.UserEntity;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 @Data
+@Builder
 public class TransportOrder {
     private Long id;
 

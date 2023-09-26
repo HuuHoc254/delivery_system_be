@@ -1,6 +1,7 @@
 package com.delivery.service.transportOrder.impl;
 
 import com.delivery.DTO.transportOrder.request.TransportOrderRequest;
+import com.delivery.model.transportOrder.TransportOrder;
 import com.delivery.repository.TransportOrderRepository;
 import com.delivery.service.transportOrder.ITransportOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,16 @@ public class TransportOrderServiceImpl implements ITransportOrderService {
     public ResponseEntity<?> createTransportOrder(List<TransportOrderRequest> transportOrderRequests) {
         try{
             for(TransportOrderRequest transportOrderRequest : transportOrderRequests){
+                transportOrderRequest.getTransportAddress().getDeliveryAddress()
+                        .forEach(deliveryAddressRequest -> {
+                            TransportOrder transportOrder = TransportOrder
+                                    .builder()
+                                    .orderNumber(transportOrderRequest.getOrderNumber())
+                                    .orderDate(transportOrderRequest.getOrderDate())
+                                    .pickupAddress(transportOrderRequest.getTransportAddress().getPickupAddress())
+                                    .deliveryAddress(deliveryAddressRequest)
+                                    .build();
+                        });
 
             }
         }catch (Exception e){

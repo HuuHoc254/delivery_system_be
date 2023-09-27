@@ -1,7 +1,7 @@
 package com.delivery.model.transportOrder;
 
-import com.delivery.entity.PickupAddressEntity;
-import com.delivery.entity.TransportOrderDetailEntity;
+import com.delivery.entity.PickupInformationEntity;
+import com.delivery.entity.ItemTransportEntity;
 import com.delivery.entity.UserEntity;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +17,12 @@ public class TransportOrder {
     private LocalDateTime orderDate;
     private String status;
     private Double totalAmount;
-    private PickupAddressEntity pickupAddress;
+    private PickupInformationEntity pickupAddress;
 
     private UserEntity shipper;
     private Boolean paymentStatus;
 
-    private List<TransportOrderDetailEntity> transportOrderDetailList;
+    private List<ItemTransportEntity> transportOrderDetailList;
 
     private LocalDateTime deliveryDate;
     private String note;

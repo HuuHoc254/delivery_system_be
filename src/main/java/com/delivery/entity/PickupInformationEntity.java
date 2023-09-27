@@ -7,19 +7,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "transport_order_details")
+@Table(name = "pickup_information")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransportOrderDetailEntity {
+public class PickupInformationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productName;
-    private Integer quantity;
-    private Double unitPrice;
-    @ManyToOne
-    @JoinColumn(name = "transport_order_id")
-    private TransportOrderEntity transportOrder;
+    private String pickupAddress;
+    private Long shopId;
+    private String shopName;
+    private String phoneContact;
+
+    @OneToOne(mappedBy = "pickupInformation")
+    private RawEcommerceOrderEntity transportOrder;
 }

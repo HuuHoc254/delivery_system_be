@@ -7,13 +7,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "transport_orders")
+@Table(name = "raw_ecommerce_orders")
 @Data
-public class TransportOrderEntity {
+public class RawEcommerceOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String orderNumber;
     private LocalDateTime orderDate;
     private String status;
@@ -24,17 +23,17 @@ public class TransportOrderEntity {
     * Tránh dư thừa dữ liệu
     * */
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pickup_address_id", referencedColumnName = "id")
-    private PickupAddressEntity pickupAddress;
+    @JoinColumn(name = "pickup_information_id", referencedColumnName = "id")
+    private PickupInformationEntity pickupInformation;
 
-    @ManyToOne
-    @JoinColumn(name = "shipper_id")
-    private UserEntity shipper;
-    private Boolean paymentStatus;
+    @OneToMany(mappedBy = "rawEcommerceOrder")
+    private List<DeliveryInformationEntity> deliveryInformationList;
 
-    @OneToMany(mappedBy = "transportOrder", fetch = FetchType.EAGER)
-    private List<TransportOrderDetailEntity> transportOrderDetailList;
+//    @ManyToOne
+//    @JoinColumn(name = "shipper_id")
+//    private UserEntity shipper;
+//    private Boolean paymentStatus;
 
-    private LocalDateTime deliveryDate;
-    private String note;
+//    private LocalDateTime deliveryDate;
+//    private String note;
 }

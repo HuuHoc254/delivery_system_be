@@ -6,20 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
-@Table(name = "delivery_address")
+@Table(name = "items_transport")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DeliveryAddressEntity {
+public class ItemTransportEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String deliveryAddress;
+    private String productName;
+    private Integer quantity;
+    private Double unitPrice;
     @ManyToOne
-    @JoinColumn(name = "pickup_addressId")
-    private PickupAddressEntity pickupAddress;
+    @JoinColumn(name = "delivery_address_id")
+    private DeliveryInformationEntity deliveryInformation;
 }

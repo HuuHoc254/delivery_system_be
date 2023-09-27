@@ -9,5 +9,6 @@ import java.util.List;
 @Builder
 public class TransportAddressRequest {
     private String pickupAddress;
+    private Long shopId;
     private List<String> deliveryAddress;
 }

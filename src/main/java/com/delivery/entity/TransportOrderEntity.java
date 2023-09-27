@@ -16,10 +16,16 @@ public class TransportOrderEntity {
 
     private String orderNumber;
     private LocalDateTime orderDate;
-    private String pickupAddress;
-    private String deliveryAddress;
     private String status;
     private Double totalAmount;
+
+    /*
+    * Khi xóa 1 row của bảng này thì tự động xóa row tương ứng của bảng liên kết
+    * Tránh dư thừa dữ liệu
+    * */
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pickup_address_id", referencedColumnName = "id")
+    private PickupAddressEntity pickupAddress;
 
     @ManyToOne
     @JoinColumn(name = "shipper_id")

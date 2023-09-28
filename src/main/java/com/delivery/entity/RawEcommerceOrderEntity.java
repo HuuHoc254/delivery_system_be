@@ -1,20 +1,26 @@
 package com.delivery.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "raw_ecommerce_orders")
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class RawEcommerceOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String orderNumber;
     private LocalDateTime orderDate;
+
+    @Enumerated(EnumType.STRING)
     private String status;
     private Double totalAmount;
 

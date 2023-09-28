@@ -1,11 +1,9 @@
 package com.delivery.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -13,6 +11,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class DeliveryInformationEntity {
     @Id
@@ -22,6 +22,7 @@ public class DeliveryInformationEntity {
     private String deliveryAddress;
     private String phoneNumber;
     private String email;
+    private LocalDateTime noteTimeRecipient;
 
     @ManyToOne
     @JoinColumn(name = "raw_ecommerceOrder_id")

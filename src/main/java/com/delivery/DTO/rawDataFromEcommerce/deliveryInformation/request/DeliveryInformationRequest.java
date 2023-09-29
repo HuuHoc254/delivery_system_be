@@ -10,6 +10,8 @@ import java.util.List;
 @Data
 @Builder
 public class DeliveryInformationRequest {
+    private String orderNumber;
+    private LocalDateTime orderDate;
     private String recipientName;
     private String deliveryAddress;
     private String phoneNumber;

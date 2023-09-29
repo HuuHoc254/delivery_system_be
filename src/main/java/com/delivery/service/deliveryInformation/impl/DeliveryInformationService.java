@@ -26,6 +26,8 @@ public class DeliveryInformationService implements IDeliveryInformationService {
         DeliveryInformationEntity deliveryInformationEntity = deliveryInformationRepository.save(
                                                                         DeliveryInformationEntity
                                                                                 .builder()
+                                                                                .orderNumber(deliveryInformationRequest.getOrderNumber())
+                                                                                .orderDate(deliveryInformationRequest.getOrderDate())
                                                                                 .recipientName(deliveryInformationRequest.getRecipientName())
                                                                                 .deliveryAddress(deliveryInformationRequest.getDeliveryAddress())
                                                                                 .phoneNumber(deliveryInformationRequest.getPhoneNumber())

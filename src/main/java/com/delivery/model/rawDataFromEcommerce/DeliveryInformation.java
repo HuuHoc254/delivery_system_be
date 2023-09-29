@@ -9,6 +9,8 @@ import java.util.List;
 @Builder
 public class DeliveryInformation {
     private Long id;
+    private String orderNumber;
+    private LocalDateTime orderDate;
     private String recipientName;
     private String deliveryAddress;
     private String phoneNumber;

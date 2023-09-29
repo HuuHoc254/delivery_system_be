@@ -17,8 +17,6 @@ public class RawEcommerceOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String orderNumber;
-    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private String status;
@@ -38,7 +36,8 @@ public class RawEcommerceOrderEntity {
 //    @ManyToOne
 //    @JoinColumn(name = "shipper_id")
 //    private UserEntity shipper;
-//    private Boolean paymentStatus;
+//    private Boolean paymentSt
+//    atus;
 
 //    private LocalDateTime deliveryDate;
 //    private String note;

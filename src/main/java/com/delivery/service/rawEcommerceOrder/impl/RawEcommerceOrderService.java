@@ -46,8 +46,6 @@ public class RawEcommerceOrderService implements IRawEOrderService {
                 //Save RawEcommerceOrder
                 RawEcommerceOrder rawOrder = RawEcommerceOrder
                         .builder()
-                        .orderNumber(rawEcommerceRequest.getOrderNumber())
-                        .orderDate(rawEcommerceRequest.getOrderDate())
                         .totalAmount(rawEcommerceRequest.getTotalAmount())
                         .build();
                 RawEcommerceOrder rawOrderSavedWithOutPickup = this.addRawEcommerceOrder(rawOrder);

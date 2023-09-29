@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 @Builder
 public class RawEcommerceRequest {
-    private String orderNumber;
-    private LocalDateTime orderDate;
     private Double totalAmount;
     private PickupInformationRequest pickupInformationRequest;
     private List<DeliveryInformationRequest> deliveryInformationRequestList;

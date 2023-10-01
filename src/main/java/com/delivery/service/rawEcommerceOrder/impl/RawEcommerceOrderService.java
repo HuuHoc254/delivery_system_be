@@ -1,5 +1,6 @@
 package com.delivery.service.rawEcommerceOrder.impl;
 
+import com.delivery.DTO.rawDataFromEcommerce.RawEcommerceOrderCreate;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.DeliveryInformationRequest;
 import com.delivery.DTO.rawDataFromEcommerce.rawEcommerceOrder.request.RawEcommerceRequest;
 import com.delivery.entity.DeliveryInformationEntity;
@@ -40,7 +41,8 @@ public class RawEcommerceOrderService implements IRawEOrderService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
-    public ResponseEntity<?> createSyntheticRawOrder(List<RawEcommerceRequest> rawEcommerceRequestList) {
+    public ResponseEntity<?> createSyntheticRawOrder(RawEcommerceOrderCreate rawEcommerceOrderCreate) {
+        List<RawEcommerceRequest> rawEcommerceRequestList = rawEcommerceOrderCreate.getRawEcommerceRequestList();
         try {
             for(RawEcommerceRequest rawEcommerceRequest : rawEcommerceRequestList){
                 //Save RawEcommerceOrder

@@ -1,9 +1,12 @@
 package com.delivery.model.rawDataFromEcommerce;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class ItemTransport {
     private Long id;

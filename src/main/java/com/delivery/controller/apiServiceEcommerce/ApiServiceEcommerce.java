@@ -1,26 +1,31 @@
 package com.delivery.controller.apiServiceEcommerce;
 
-import com.delivery.DTO.rawDataFromEcommerce.rawEcommerceOrder.request.RawEcommerceRequest;
+import com.delivery.DTO.rawDataFromEcommerce.RawEcommerceOrderCreate;
+import com.delivery.service.costShipping.ICostShippingService;
 import com.delivery.service.rawEcommerceOrder.IRawEOrderService;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/delivery")
 public class ApiServiceEcommerce {
     private final IRawEOrderService rawEOrderService;
+    private final ICostShippingService costShippingService;
 
-    public ApiServiceEcommerce(IRawEOrderService rawEOrderService) {
+    public ApiServiceEcommerce(IRawEOrderService rawEOrderService, ICostShippingService costShippingService) {
         this.rawEOrderService = rawEOrderService;
+        this.costShippingService = costShippingService;
     }
 
     @PostMapping("receive-order")
-    private ResponseEntity<?> catchingRawDataFormEcommerce(List<RawEcommerceRequest> rawEcommerceRequests)
+    private ResponseEntity<?> catchingRawDataFormEcommerce(@RequestBody RawEcommerceOrderCreate rawEcommerceOrderCreate)
             throws Exception {
-        return rawEOrderService.createSyntheticRawOrder(rawEcommerceRequests);
+        return rawEOrderService.createSyntheticRawOrder(rawEcommerceOrderCreate);
+    }
+
+    @GetMapping("cost")
+    private ResponseEntity<?> getCostDeliveryByAddress(@RequestParam @NotBlank String deliveryAddress){
+        return costShippingService.getCostShipping(deliveryAddress);
     }
 }

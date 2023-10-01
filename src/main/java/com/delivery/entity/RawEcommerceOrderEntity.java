@@ -19,7 +19,7 @@ public class RawEcommerceOrderEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private String status;
+    private EStatus status;
     private Double totalAmount;
 
     /*

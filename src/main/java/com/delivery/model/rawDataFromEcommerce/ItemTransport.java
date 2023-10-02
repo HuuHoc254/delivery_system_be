@@ -1,5 +1,6 @@
 package com.delivery.model.rawDataFromEcommerce;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Data
@@ -13,5 +14,6 @@ public class ItemTransport {
     private String productName;
     private Integer quantity;
     private Double unitPrice;
+    @JsonIgnore
     private DeliveryInformation deliveryInformation;
 }

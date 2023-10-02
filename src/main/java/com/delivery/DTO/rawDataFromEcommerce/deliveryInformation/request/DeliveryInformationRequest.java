@@ -21,5 +21,6 @@ public class DeliveryInformationRequest {
     private String phoneNumber;
     private String email;
     private LocalDateTime noteTimeRecipient;
+    private Boolean paymentSt;
     private List<ItemTransportRequest> itemTransportRequestList;
 }

@@ -2,8 +2,11 @@ package com.delivery.controller.apiServiceEcommerce;
 
 import com.delivery.DTO.rawDataFromEcommerce.RawEcommerceOrderCreate;
 import com.delivery.service.costShipping.ICostShippingService;
+import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.rawEcommerceOrder.IRawEOrderService;
+import com.delivery.util.ResponseObject;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class ApiServiceEcommerce {
     private final IRawEOrderService rawEOrderService;
     private final ICostShippingService costShippingService;
+    @Autowired
+    private IDeliveryInformationService deliveryInformationService;
 
     public ApiServiceEcommerce(IRawEOrderService rawEOrderService, ICostShippingService costShippingService) {
         this.rawEOrderService = rawEOrderService;
@@ -27,5 +32,17 @@ public class ApiServiceEcommerce {
     @GetMapping("cost")
     private ResponseEntity<?> getCostDeliveryByAddress(@RequestParam @NotBlank String deliveryAddress){
         return costShippingService.getCostShipping(deliveryAddress);
+    }
+    @GetMapping("test-data-route")
+    private ResponseEntity<?> getTransportOrder(){
+        deliveryInformationService.testRoute();
+
+        return ResponseEntity.ok().body(ResponseObject
+                .builder()
+                .status("SUCCESS")
+                .message("Not yet Success !")
+                .results("")
+                .build()
+        );
     }
 }

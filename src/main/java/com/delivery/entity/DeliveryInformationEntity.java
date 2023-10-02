@@ -30,6 +30,15 @@ public class DeliveryInformationEntity {
     @JoinColumn(name = "raw_ecommerceOrder_id")
     private RawEcommerceOrderEntity rawEcommerceOrder;
 
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
+
+    private LocalDateTime deliveryDate;
+    @ManyToOne
+    @JoinColumn(name = "shipper_id")
+    private UserEntity shipper;
+    private Boolean paymentSt;
+
     @OneToMany(mappedBy = "deliveryInformation", fetch = FetchType.EAGER)
     private List<ItemTransportEntity> itemTransportList;
 }

@@ -36,6 +36,8 @@ public class MapServiceImpl implements IMapService {
             s = s.trim();
             points+=s.concat(";");
         }
+        System.out.println(points);
+
         String routeApiUrl = "http://api.map4d.vn/sdk/route?key="+apiKey+"&origin="+original+
                 "&destination="+destination+"&points="+points+"&mode=motorcycle"+"optimize=True";
         System.out.println(routeApiUrl);

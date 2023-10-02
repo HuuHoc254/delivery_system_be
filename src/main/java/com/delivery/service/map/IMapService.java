@@ -8,4 +8,5 @@ public interface IMapService {
     ResponseApi getLocationByAddress(String address);
     Boolean checkExistAddress(String address);
     String getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList);
+//    List<String> groupDeliveryAddressByDistrict();
 }

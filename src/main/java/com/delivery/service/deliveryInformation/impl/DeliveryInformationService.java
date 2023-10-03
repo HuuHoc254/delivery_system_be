@@ -10,11 +10,7 @@ import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import com.delivery.repository.DeliveryInformationRepository;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
-import com.delivery.service.map.impl.MapServiceImpl;
-import com.delivery.util.ResponseObject;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -119,17 +115,23 @@ public class DeliveryInformationService implements IDeliveryInformationService {
         return null;
     }
     @Override
-    public void testRoute(){
+    public String testRoute(){
         List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = this.groupDeliveryInformationByDistrict();
         System.out.println("sizee: "+deliveryInformationByDistrictList.size());
             List<String> deliveryAddressList = deliveryInformationByDistrictList.get(0).getDeliveryInformationList()
                     .stream()
                     .map(DeliveryInformation::getDeliveryAddress).toList();
-            String resulRoute = mapService.getRouteResolveTSP(placeTsp, placeTsp, deliveryAddressList);
+
+            String resulRoute = mapService
+                    .getRouteResolveTSP(placeTsp.replace(" ","+"),
+                            placeTsp.replace(" ","+"),
+                            deliveryAddressList);
+
             System.out.println("Result: "+resulRoute);
             System.out.println(deliveryAddressList.size());
             System.out.println("==========================");
 
+        return resulRoute;
     }
 
 }

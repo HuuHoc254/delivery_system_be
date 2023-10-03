@@ -15,5 +15,5 @@ public interface IDeliveryInformationService {
     List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict();
     String getDistrict(String deliveryAddress);
     List<TransportOrder> getTransportOrder();
-    void testRoute();
+    String testRoute();
 }

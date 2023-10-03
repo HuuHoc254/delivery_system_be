@@ -35,13 +35,13 @@ public class ApiServiceEcommerce {
     }
     @GetMapping("test-data-route")
     private ResponseEntity<?> getTransportOrder(){
-        deliveryInformationService.testRoute();
+        String result = deliveryInformationService.testRoute();
 
         return ResponseEntity.ok().body(ResponseObject
                 .builder()
                 .status("SUCCESS")
                 .message("Not yet Success !")
-                .results("")
+                .results(result)
                 .build()
         );
     }

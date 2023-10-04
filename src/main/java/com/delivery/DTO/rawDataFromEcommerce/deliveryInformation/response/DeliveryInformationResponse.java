@@ -1,17 +1,18 @@
-package com.delivery.model.rawDataFromEcommerce;
+package com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response;
 
 import com.delivery.entity.EStatus;
-import com.delivery.entity.UserEntity;
+import com.delivery.model.rawDataFromEcommerce.ItemTransport;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class DeliveryInformation {
+public class DeliveryInformationResponse {
     private Long id;
     private String orderNumber;
     private LocalDateTime orderDate;
@@ -19,10 +20,6 @@ public class DeliveryInformation {
     private String deliveryAddress;
     private String phoneNumber;
     private String email;
-    private LocalDateTime noteTimeRecipient;
     private EStatus status;
-    private LocalDateTime deliveryDate;
-    private UserEntity shipper;
-    private Boolean paymentSt;
     private List<ItemTransport> itemTransportList;
 }

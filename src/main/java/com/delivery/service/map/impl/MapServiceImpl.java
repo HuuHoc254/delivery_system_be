@@ -1,6 +1,7 @@
 package com.delivery.service.map.impl;
 
 import com.delivery.model.geocoding.ResponseApi;
+import com.delivery.model.route.ResponseRouteApi;
 import com.delivery.service.map.IMapService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,15 +31,17 @@ public class MapServiceImpl implements IMapService {
     }
 
     @Override
-    public String getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
-        String points = "";
+    public ResponseRouteApi getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
+        StringBuilder points = new StringBuilder();
         for(String s : deliveryAddressList){
             s = s.trim();
-            points+=s.concat(";");
+            points.append(s.replace(" ", "%").concat(";"));
         }
+        System.out.println(points);
+
         String routeApiUrl = "http://api.map4d.vn/sdk/route?key="+apiKey+"&origin="+original+
-                "&destination="+destination+"&points="+points+"&mode=motorcycle"+"optimize=True";
+                "&destination="+destination+"&points="+points+"&mode=motorcycle"+"&optimize=True";
         System.out.println(routeApiUrl);
-        return restTemplate.getForObject(routeApiUrl, String.class);
+        return restTemplate.getForObject(routeApiUrl, ResponseRouteApi.class);
     }
 }

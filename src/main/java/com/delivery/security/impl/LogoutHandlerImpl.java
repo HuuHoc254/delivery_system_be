@@ -31,7 +31,7 @@ public class LogoutHandlerImpl implements LogoutHandler {
     @Transactional
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String userName = jwtProvider.getUserNameFromJwtToken(parseJwt(request));
-        UserEntity userEntity = userRepository.findByUserName(userName)
+        UserEntity userEntity = userRepository.findByUserNameOrPhone(userName, userName)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         refreshTokenRepository.deleteByUser(userEntity);
         SecurityContextHolder.clearContext();

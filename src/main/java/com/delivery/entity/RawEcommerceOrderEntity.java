@@ -2,8 +2,6 @@ package com.delivery.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,11 +15,7 @@ public class RawEcommerceOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String orderNumber;
-    private LocalDateTime orderDate;
 
-    @Enumerated(EnumType.STRING)
-    private String status;
     private Double totalAmount;
 
     /*
@@ -34,12 +28,4 @@ public class RawEcommerceOrderEntity {
 
     @OneToMany(mappedBy = "rawEcommerceOrder")
     private List<DeliveryInformationEntity> deliveryInformationList;
-
-//    @ManyToOne
-//    @JoinColumn(name = "shipper_id")
-//    private UserEntity shipper;
-//    private Boolean paymentStatus;
-
-//    private LocalDateTime deliveryDate;
-//    private String note;
 }

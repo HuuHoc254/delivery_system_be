@@ -54,4 +54,6 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "shipper", fetch = FetchType.LAZY)
+    private List<DeliveryInformationEntity> deliveryInformationList;
 }

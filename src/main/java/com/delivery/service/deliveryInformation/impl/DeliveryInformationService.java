@@ -2,14 +2,18 @@ package com.delivery.service.deliveryInformation.impl;
 
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.DeliveryInformationRequest;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationByDistrict;
+import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationResponse;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.TransportOrder;
 import com.delivery.entity.DeliveryInformationEntity;
 import com.delivery.entity.EStatus;
 import com.delivery.entity.RawEcommerceOrderEntity;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
+import com.delivery.model.route.ResponseRouteApi;
 import com.delivery.repository.DeliveryInformationRepository;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -101,28 +105,52 @@ public class DeliveryInformationService implements IDeliveryInformationService {
     public List<TransportOrder> getTransportOrder() {
         List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = this.groupDeliveryInformationByDistrict();
 
+        List<TransportOrder> transportOrders = new ArrayList<>();
         for(DeliveryInformationByDistrict informationByDistrict : deliveryInformationByDistrictList){
-            List<String> deliveryAddressList = informationByDistrict.getDeliveryInformationList()
-                    .stream()
-                    .map(DeliveryInformation::getDeliveryAddress).toList();
 
-            String resulRoute = mapService.getRouteResolveTSP(placeTsp, placeTsp, deliveryAddressList);
-            System.out.println("Result: "+resulRoute);
-            System.out.println(deliveryAddressList.size());
-            System.out.println("==========================");
+            if(informationByDistrict.getDeliveryInformationList().size() <= 20){
+                List<DeliveryInformationResponse> deliveryInformationResponseList = informationByDistrict
+                        .getDeliveryInformationList()
+                        .stream()
+                        .map(deliveryInformation -> DeliveryInformationResponse
+                                .builder()
+                                .id(deliveryInformation.getId())
+                                .orderNumber(deliveryInformation.getOrderNumber())
+                                .orderDate(deliveryInformation.getOrderDate())
+                                .recipientName(deliveryInformation.getRecipientName())
+                                .deliveryAddress(deliveryInformation.getDeliveryAddress())
+                                .phoneNumber(deliveryInformation.getPhoneNumber())
+                                .email(deliveryInformation.getEmail())
+                                .status(deliveryInformation.getStatus())
+                                .build()).toList();
+                //Get List ItemTrasport
+
+
+                TransportOrder transportOrder = TransportOrder
+                        .builder()
+                        .transportOrderNumber(RandomStringUtils.randomAlphanumeric(5))
+                        .build();
+            }
+//            List<String> deliveryAddressList = informationByDistrict.getDeliveryInformationList()
+//                    .stream()
+//                    .map(DeliveryInformation::getDeliveryAddress).toList();
+//
+//            ResponseRouteApi resulRoute = mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
+//                                                            placeTsp.replace(" ","+"),
+//                                                            deliveryAddressList);
         }
 
         return null;
     }
     @Override
-    public String testRoute(){
+    public ResponseRouteApi testRoute(){
         List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = this.groupDeliveryInformationByDistrict();
         System.out.println("sizee: "+deliveryInformationByDistrictList.size());
             List<String> deliveryAddressList = deliveryInformationByDistrictList.get(0).getDeliveryInformationList()
                     .stream()
                     .map(DeliveryInformation::getDeliveryAddress).toList();
 
-            String resulRoute = mapService
+        ResponseRouteApi resulRoute = mapService
                     .getRouteResolveTSP(placeTsp.replace(" ","+"),
                             placeTsp.replace(" ","+"),
                             deliveryAddressList);

@@ -1,9 +1,6 @@
 package com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,7 +8,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class TransportOrder {
-    private Long transportOrderNumber;
+    private String transportOrderNumber;
     private List<DeliveryInformationResponse> deliveryInformationResponseList;
 }

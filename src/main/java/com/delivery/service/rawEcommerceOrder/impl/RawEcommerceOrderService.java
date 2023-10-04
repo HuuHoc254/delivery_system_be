@@ -43,6 +43,16 @@ public class RawEcommerceOrderService implements IRawEOrderService {
     @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public ResponseEntity<?> createSyntheticRawOrder(RawEcommerceOrderCreate rawEcommerceOrderCreate) {
         List<RawEcommerceRequest> rawEcommerceRequestList = rawEcommerceOrderCreate.getRawEcommerceRequestList();
+        if(rawEcommerceRequestList.isEmpty()){
+            return ResponseEntity
+                    .badRequest()
+                    .body(ResponseObject
+                            .builder()
+                            .status("FAIL")
+                            .message("Data's Empty!!!!")
+                            .build()
+                    );
+        }
         try {
             for(RawEcommerceRequest rawEcommerceRequest : rawEcommerceRequestList){
                 //Save RawEcommerceOrder

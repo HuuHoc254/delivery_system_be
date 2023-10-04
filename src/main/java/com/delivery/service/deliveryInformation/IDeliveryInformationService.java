@@ -6,6 +6,7 @@ import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.Delive
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.TransportOrder;
 import com.delivery.entity.RawEcommerceOrderEntity;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
+import com.delivery.model.route.ResponseRouteApi;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface IDeliveryInformationService {
     List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict();
     String getDistrict(String deliveryAddress);
     List<TransportOrder> getTransportOrder();
-    String testRoute();
+    ResponseRouteApi testRoute();
 }

@@ -1,6 +1,7 @@
 package com.delivery.controller.apiServiceEcommerce;
 
 import com.delivery.DTO.rawDataFromEcommerce.RawEcommerceOrderCreate;
+import com.delivery.model.route.ResponseRouteApi;
 import com.delivery.service.costShipping.ICostShippingService;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.rawEcommerceOrder.IRawEOrderService;
@@ -35,7 +36,7 @@ public class ApiServiceEcommerce {
     }
     @GetMapping("test-data-route")
     private ResponseEntity<?> getTransportOrder(){
-        String result = deliveryInformationService.testRoute();
+        ResponseRouteApi result = deliveryInformationService.testRoute();
 
         return ResponseEntity.ok().body(ResponseObject
                 .builder()

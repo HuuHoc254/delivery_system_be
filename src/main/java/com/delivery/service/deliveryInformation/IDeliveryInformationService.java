@@ -7,6 +7,7 @@ import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.Transp
 import com.delivery.entity.RawEcommerceOrderEntity;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import com.delivery.model.route.ResponseRouteApi;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface IDeliveryInformationService {
                                                           RawEcommerceOrderEntity rawEcommerceOrder);
     List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict();
     String getDistrict(String deliveryAddress);
-    List<TransportOrder> getTransportOrder();
+    ResponseEntity<?> getTransportOrder();
     ResponseRouteApi testRoute();
 }

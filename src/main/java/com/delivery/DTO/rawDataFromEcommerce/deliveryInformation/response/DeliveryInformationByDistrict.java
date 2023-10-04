@@ -4,7 +4,7 @@ import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import lombok.*;
 
 import java.util.List;
-
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

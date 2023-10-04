@@ -34,16 +34,17 @@ public class ApiServiceEcommerce {
     private ResponseEntity<?> getCostDeliveryByAddress(@RequestParam @NotBlank String deliveryAddress){
         return costShippingService.getCostShipping(deliveryAddress);
     }
-    @GetMapping("test-data-route")
-    private ResponseEntity<?> getTransportOrder(){
-        ResponseRouteApi result = deliveryInformationService.testRoute();
-
-        return ResponseEntity.ok().body(ResponseObject
-                .builder()
-                .status("SUCCESS")
-                .message("Not yet Success !")
-                .results(result)
-                .build()
-        );
-    }
+//    @GetMapping("test-data-route")
+//    private ResponseEntity<?> getTransportOrder(){
+//        ResponseRouteApi result = deliveryInformationService.testRoute();
+//
+//        return ResponseEntity.ok()
+//                .body(ResponseObject
+//                .builder()
+//                .status("SUCCESS")
+//                .message("Not yet Success !")
+//                .results(result)
+//                .build()
+//        );
+//    }
 }

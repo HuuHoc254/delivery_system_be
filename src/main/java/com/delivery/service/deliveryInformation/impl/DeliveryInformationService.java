@@ -1,9 +1,8 @@
 package com.delivery.service.deliveryInformation.impl;
 
+import com.delivery.DTO.TransportOrderResponse;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.DeliveryInformationRequest;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationByDistrict;
-import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationResponse;
-import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.TransportOrder;
 import com.delivery.entity.DeliveryInformationEntity;
 import com.delivery.entity.EStatus;
 import com.delivery.entity.RawEcommerceOrderEntity;
@@ -12,9 +11,10 @@ import com.delivery.model.route.ResponseRouteApi;
 import com.delivery.repository.DeliveryInformationRepository;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.delivery.util.ResponseObject;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -60,33 +60,34 @@ public class DeliveryInformationService implements IDeliveryInformationService {
     public List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict() {
         List<DeliveryInformationEntity> deliveryInformationList = deliveryInformationRepository
                 .findAllByStatusIs(EStatus.DELIVERING);
+        System.out.println("Size groub: "+deliveryInformationList.size());
+        if(!deliveryInformationList.isEmpty()){
+            Map<String, List<DeliveryInformation>> groupDeliveryInformation = new HashMap<>();
 
-        Map<String, List<DeliveryInformation>> groupDeliveryInformation = new HashMap<>();
-
-        for (DeliveryInformationEntity deliveryInformation : deliveryInformationList) {
-            String district = this.getDistrict(deliveryInformation.getDeliveryAddress());
-            if (districtInnerAreaSet.contains(district)) {
-                /*
-                * Bởi vì groupDeliveryInformation ban đầu có thể là chưa được khởi tạo
-                * hoặc là map rỗng cho nên mới cần dùng .computeIfAbsent
-                * AE xài Map theo kiểu của Java8+ này đỡ phải if-else dài dòng*/
-                groupDeliveryInformation
-                        //Nếu district is present in Map return value theo district, rồi add thêm deliveryAddress
-                        //Nếu key không tồn tại thì nó sẽ tạo mới một key(là district) và value được add vào.
-                        .computeIfAbsent(district, key -> new ArrayList<>())
-                        .add(modelMapper.map(deliveryInformation, DeliveryInformation.class));
+            for (DeliveryInformationEntity deliveryInformationEntity : deliveryInformationList) {
+                String district = getDistrict(deliveryInformationEntity.getDeliveryAddress());
+                if (districtInnerAreaSet.contains(district)) {
+                    /*
+                     * Bởi vì groupDeliveryInformation ban đầu có thể là chưa được khởi tạo
+                     * hoặc là map rỗng cho nên mới cần dùng .computeIfAbsent
+                     * AE xài Map theo kiểu của Java8+ này đỡ phải if-else dài dòng*/
+                    groupDeliveryInformation
+                            //Nếu district is present in Map return value theo district, rồi add thêm deliveryAddress
+                            //Nếu key không tồn tại thì nó sẽ tạo mới một key(là district) và value được add vào.
+                            .computeIfAbsent(district, key -> new ArrayList<>())
+                            .add(modelMapper.map(deliveryInformationEntity, DeliveryInformation.class));
+                }
             }
+            return groupDeliveryInformation
+                    .entrySet()
+                    .stream()
+                    .map(entry -> DeliveryInformationByDistrict.builder()
+                            .districtName(entry.getKey())
+                            .deliveryInformationList(entry.getValue())
+                            .build())
+                    .collect(Collectors.toList());
         }
-        System.out.println("Size of map: "+groupDeliveryInformation.size());
-
-        return groupDeliveryInformation
-                .entrySet()
-                .stream()
-                .map(entry -> DeliveryInformationByDistrict.builder()
-                        .districtName(entry.getKey())
-                        .deliveryInformationList(entry.getValue())
-                        .build())
-                .collect(Collectors.toList());
+        return new ArrayList<>();
     }
 
     @Override
@@ -100,48 +101,51 @@ public class DeliveryInformationService implements IDeliveryInformationService {
         return district;
     }
 
-    private final String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
     @Override
-    public List<TransportOrder> getTransportOrder() {
-        List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = this.groupDeliveryInformationByDistrict();
+    public ResponseEntity<?> getTransportOrder() {
+        List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = groupDeliveryInformationByDistrict();
+        try {
+            if(!deliveryInformationByDistrictList.isEmpty()){
 
-        List<TransportOrder> transportOrders = new ArrayList<>();
-        for(DeliveryInformationByDistrict informationByDistrict : deliveryInformationByDistrictList){
+                TransportOrderResponse<List<DeliveryInformationByDistrict>> transportOrders = new TransportOrderResponse<>();
+                transportOrders.setData(deliveryInformationByDistrictList);
 
-            if(informationByDistrict.getDeliveryInformationList().size() <= 20){
-                List<DeliveryInformationResponse> deliveryInformationResponseList = informationByDistrict
-                        .getDeliveryInformationList()
-                        .stream()
-                        .map(deliveryInformation -> DeliveryInformationResponse
-                                .builder()
-                                .id(deliveryInformation.getId())
-                                .orderNumber(deliveryInformation.getOrderNumber())
-                                .orderDate(deliveryInformation.getOrderDate())
-                                .recipientName(deliveryInformation.getRecipientName())
-                                .deliveryAddress(deliveryInformation.getDeliveryAddress())
-                                .phoneNumber(deliveryInformation.getPhoneNumber())
-                                .email(deliveryInformation.getEmail())
-                                .status(deliveryInformation.getStatus())
-                                .build()).toList();
-                //Get List ItemTrasport
-
-
-                TransportOrder transportOrder = TransportOrder
-                        .builder()
-                        .transportOrderNumber(RandomStringUtils.randomAlphanumeric(5))
-                        .build();
+                System.out.println("Size of result: "+deliveryInformationByDistrictList.size());
+                return ResponseEntity
+                        .status(HttpStatusCode.valueOf(200))
+                        .body(
+                                ResponseObject
+                                        .builder()
+                                        .status("SUCCESS")
+                                        .message("Get Transport Order Success")
+                                        .results(transportOrders)
+                                        .build()
+                        );
             }
-//            List<String> deliveryAddressList = informationByDistrict.getDeliveryInformationList()
-//                    .stream()
-//                    .map(DeliveryInformation::getDeliveryAddress).toList();
-//
-//            ResponseRouteApi resulRoute = mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
-//                                                            placeTsp.replace(" ","+"),
-//                                                            deliveryAddressList);
-        }
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(204))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("FAIL")
+                                    .build()
+                    );
 
-        return null;
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(404))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("FAIL")
+                                    .message(e.getMessage())
+                                    .results("")
+                                    .build()
+                    );
+        }
     }
+
+    private final String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
     @Override
     public ResponseRouteApi testRoute(){
         List<DeliveryInformationByDistrict> deliveryInformationByDistrictList = this.groupDeliveryInformationByDistrict();

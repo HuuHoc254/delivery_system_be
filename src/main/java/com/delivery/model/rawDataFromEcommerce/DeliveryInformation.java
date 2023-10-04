@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,7 +20,6 @@ public class DeliveryInformation {
     private String phoneNumber;
     private String email;
     private LocalDateTime noteTimeRecipient;
-    private RawEcommerceOrder rawEcommerceOrder;
     private EStatus status;
     private LocalDateTime deliveryDate;
     private UserEntity shipper;

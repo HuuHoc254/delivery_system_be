@@ -3,8 +3,6 @@ package com.delivery.controller.transportOrder;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +31,13 @@ public class TransportOrderController {
         return deliveryInformationService
                 .getTransportOrderByShipper(shipperId, deliveryInformationList);
     }
+
+    @PatchMapping("/shipping/{dInforId}/status")
+    private ResponseEntity<?> changeDeliveryStatus(@PathVariable Long dInforId,
+                                                           @RequestBody Boolean currentStatus){
+        return deliveryInformationService.changeStatusDelivery(dInforId, currentStatus);
+    }
+
     @GetMapping("/route")
     private String getRouteResolveTSP(List<String> deliveryAddressList){
         String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";

@@ -20,7 +20,7 @@ public class EmailServiceImpl implements IEmailService {
             throws MailException {
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-//            mailMessage.setFrom("twiceh.oncem.delivery979803@gmail.com");
+            mailMessage.setFrom("twiceh.oncem.delivery979803@gmail.com");
             mailMessage.setTo(to);
             mailMessage.setSubject(subject);
             mailMessage.setText(text);

@@ -17,5 +17,7 @@ public interface IDeliveryInformationService {
     List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict();
     String getDistrict(String deliveryAddress);
     ResponseEntity<?> getTransportOrder();
-    ResponseRouteApi testRoute();
+    ResponseEntity<?> getTransportOrderByShipper(Long shipperId, List<DeliveryInformation> deliveryInformationList);
+//    ResponseRouteApi testRoute();
+    ResponseEntity<?> changeStatusDelivery(Long deliveryInformationId, Boolean currentStatus);
 }

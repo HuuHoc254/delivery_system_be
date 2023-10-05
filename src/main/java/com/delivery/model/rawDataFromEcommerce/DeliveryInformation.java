@@ -2,6 +2,7 @@ package com.delivery.model.rawDataFromEcommerce;
 
 import com.delivery.entity.EStatus;
 import com.delivery.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class DeliveryInformation {
     private LocalDateTime noteTimeRecipient;
     private EStatus status;
     private LocalDateTime deliveryDate;
+    @JsonIgnore
     private UserEntity shipper;
     private Boolean paymentSt;
     private List<ItemTransport> itemTransportList;

@@ -8,6 +8,6 @@ import java.util.List;
 public interface IMapService {
     ResponseApi getLocationByAddress(String address);
     Boolean checkExistAddress(String address);
-    ResponseRouteApi getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList);
+    String getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList);
 //    List<String> groupDeliveryAddressByDistrict();
 }

@@ -31,7 +31,7 @@ public class ApiServiceEcommerce {
     }
 
     @GetMapping("cost")
-    private ResponseEntity<?> getCostDeliveryByAddress(@RequestParam @NotBlank String deliveryAddress){
+    private Double getCostDeliveryByAddress(@RequestParam @NotBlank String deliveryAddress){
         return costShippingService.getCostShipping(deliveryAddress);
     }
 //    @GetMapping("test-data-route")

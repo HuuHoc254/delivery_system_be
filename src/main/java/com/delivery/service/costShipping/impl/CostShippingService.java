@@ -10,27 +10,11 @@ public class CostShippingService implements ICostShippingService {
 
 
     @Override
-    public ResponseEntity<?> getCostShipping(String deliveryAddress) {
+    public Double getCostShipping(String deliveryAddress) {
         if(checkRegion(deliveryAddress)){
-            return ResponseEntity
-                    .ok()
-                    .body(ResponseObject
-                            .builder()
-                            .status("SUCCESS")
-                            .message("Inner City Area")
-                            .results(20000.0)
-                            .build()
-                    );
+            return 20000.0;
         }
-        return ResponseEntity
-                .ok()
-                .body(ResponseObject
-                        .builder()
-                        .status("SUCCESS")
-                        .message("Suburban Area")
-                        .results(30000.0)
-                        .build()
-                );
+        return 30000.0;
     }
 
     @Override

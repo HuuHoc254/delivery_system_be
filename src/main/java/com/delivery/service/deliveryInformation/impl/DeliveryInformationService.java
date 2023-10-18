@@ -2,12 +2,16 @@ package com.delivery.service.deliveryInformation.impl;
 
 import com.delivery.DTO.TransportOrderResponse;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.DeliveryInformationRequest;
+import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.EcommerceChangeStatus;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationByDistrict;
+import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationResponse;
+import com.delivery.DTO.user.response.DeliveryInformationServiceShipping;
 import com.delivery.entity.DeliveryInformationEntity;
 import com.delivery.entity.EStatus;
 import com.delivery.entity.RawEcommerceOrderEntity;
 import com.delivery.entity.UserEntity;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
+import com.delivery.model.rawDataFromEcommerce.ItemTransport;
 import com.delivery.repository.DeliveryInformationRepository;
 import com.delivery.repository.UserRepository;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
@@ -17,6 +21,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,15 +36,17 @@ public class DeliveryInformationService implements IDeliveryInformationService {
     private final UserRepository userRepository;
     private final IEmailService emailService;
     private final ModelMapper modelMapper;
+    private final RestTemplate restTemplate;
 
     public DeliveryInformationService(DeliveryInformationRepository deliveryInformationRepository,
                                       ModelMapper modelMapper,
                                       UserRepository userRepository,
-                                      IEmailService emailService) {
+                                      IEmailService emailService, RestTemplate restTemplate) {
         this.deliveryInformationRepository = deliveryInformationRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.restTemplate = restTemplate;
     }
     @Override
     public DeliveryInformation addDeliveryInformationFormRequest(DeliveryInformationRequest deliveryInformationRequest,
@@ -71,9 +79,31 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 .findAllByStatusIs(EStatus.DELIVERING);
 //        System.out.println("Size groub: "+deliveryInformationList.size());
         if(!deliveryInformationList.isEmpty()){
-            Map<String, List<DeliveryInformation>> groupDeliveryInformation = new HashMap<>();
+            Map<String, List<DeliveryInformationServiceShipping>> groupDeliveryInformation = new HashMap<>();
 
             for (DeliveryInformationEntity deliveryInformationEntity : deliveryInformationList) {
+
+                //Covert DeliveryEntity To DeliveryInformationService
+                DeliveryInformationServiceShipping deliveryInformationServiceShipping = DeliveryInformationServiceShipping.builder()
+                        .id(deliveryInformationEntity.getId())
+                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+                        .orderDate(deliveryInformationEntity.getOrderDate())
+                        .recipientName(deliveryInformationEntity.getRecipientName())
+                        .deliveryAddress(deliveryInformationEntity.getDeliveryAddress())
+                        .phoneNumber(deliveryInformationEntity.getPhoneNumber())
+                        .email(deliveryInformationEntity.getEmail())
+                        .noteTimeRecipient(deliveryInformationEntity.getNoteTimeRecipient())
+                        .status(deliveryInformationEntity.getStatus())
+                        .deliveryDate(deliveryInformationEntity.getDeliveryDate())
+                        .paymentSt(deliveryInformationEntity.getPaymentSt())
+                        .itemTransportList(deliveryInformationEntity.getItemTransportList().stream()
+                                .map(itemTransportEntity -> modelMapper.map(itemTransportEntity,ItemTransport.class)).toList())
+                        .build();
+                //Void Null-pointer
+                if(deliveryInformationEntity.getShipper() != null){
+                    deliveryInformationServiceShipping.setShipperId(deliveryInformationEntity.getShipper().getId());
+                }
+
                 String district = getDistrict(deliveryInformationEntity.getDeliveryAddress());
                 if (districtInnerAreaSet.contains(district)) {
                     /*
@@ -84,7 +114,7 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                             //Nếu district is present in Map return value theo district, rồi add thêm deliveryAddress
                             //Nếu key không tồn tại thì nó sẽ tạo mới một key(là district) và value được add vào.
                             .computeIfAbsent(district, key -> new ArrayList<>())
-                            .add(modelMapper.map(deliveryInformationEntity, DeliveryInformation.class));
+                            .add(deliveryInformationServiceShipping);
                 }
             }
             return groupDeliveryInformation
@@ -214,20 +244,40 @@ public class DeliveryInformationService implements IDeliveryInformationService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> changeStatusDelivery(Long deliveryInformationId, Boolean currentStatus) {
         try{
             DeliveryInformationEntity deliveryInformationEntity = deliveryInformationRepository.findById(deliveryInformationId)
                     .orElseThrow(NoSuchElementException::new);
+            String baseEcommerceURL = "http://192.168.110.88:8080/api/v1/public/order/delivery-request";
             if(currentStatus){
                 deliveryInformationEntity.setStatus(EStatus.DELIVERED_SUCCESSFULLY);
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
 
+                //Call-Api change status Order E-commerce
+                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+                        .builder()
+                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+                        .status(Boolean.TRUE)
+                        .build();
+                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
+
+                //Send Mail To User
                 String message = "Thank you for your trust and the opportunity for us to serve you.\\n%s\\n" +
                         "Please click on the link below to rate product's quality:";
                 emailService.sendEmail(deliveryInformationEntity.getEmail(),"Completed The Order", message);
             }else{
                 deliveryInformationEntity.setStatus(EStatus.DELIVERY_FAILED);
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
+
+                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+                        .builder()
+                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+                        .status(Boolean.FALSE)
+                        .build();
+                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 String message = "Thanks for your interest in our products.\\n%s\\n" +
                         "To purchase next time, please click on the link:";

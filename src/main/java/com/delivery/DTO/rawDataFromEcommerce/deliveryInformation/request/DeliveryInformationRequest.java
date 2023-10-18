@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class DeliveryInformationRequest {
-    private String orderNumber;
+    private Integer orderNumber;
     private LocalDateTime orderDate;
     private String recipientName;
     private String deliveryAddress;

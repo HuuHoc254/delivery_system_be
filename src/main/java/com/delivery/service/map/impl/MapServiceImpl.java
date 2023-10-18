@@ -1,12 +1,18 @@
 package com.delivery.service.map.impl;
 
+import com.delivery.DTO.DataResponse;
+import com.delivery.DTO.route.ResponseGetRoute;
+import com.delivery.DTO.route.WaypointMarker;
 import com.delivery.model.geocoding.ResponseApi;
-import com.delivery.model.route.ResponseRouteApi;
 import com.delivery.service.map.IMapService;
+import com.delivery.util.ResponseObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,5 +49,64 @@ public class MapServiceImpl implements IMapService {
                 "&destination="+destination+"&points="+points+"&mode=motorcycle"+"&optimize=True";
         System.out.println(routeApiUrl);
         return restTemplate.getForObject(routeApiUrl, String.class);
+    }
+
+    @Override
+    public ResponseEntity<?> getDirectionAndPositionWayPointer(String original,
+                                                               String destination,
+                                                               List<String> deliveryAddressList) {
+
+        try {
+
+            String resultDirection = this.getRouteResolveTSP(original,destination,deliveryAddressList);
+
+            List<WaypointMarker> waypointMarkers = new ArrayList<>();
+            //Get Location's WayPointer-address
+            for(String deliveryAddress : deliveryAddressList){
+                //Call api get lat-long location
+                ResponseApi responseGeocoding = this.getLocationByAddress(deliveryAddress);
+
+                String[] splitAddress = deliveryAddress.split(",");
+                String address = splitAddress[0].trim();
+
+                waypointMarkers.add(WaypointMarker.builder()
+                        .location(responseGeocoding.getResult().get(0).getLocation())
+                        .title(address)
+                        .draggable(true)
+                        .visible(true)
+                        .build());
+            }
+            ResponseGetRoute responseGetRoute = ResponseGetRoute
+                    .builder()
+                    .resultDirection(resultDirection)
+                    .waypointMarker(waypointMarkers)
+                    .build();
+
+            DataResponse<ResponseGetRoute> dataResponse = new DataResponse<>();
+            dataResponse.setData(responseGetRoute);
+
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(200))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("SUCCESS")
+                                    .message("Get Direction Success")
+                                    .results(dataResponse)
+                                    .build()
+                    );
+
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(404))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("FAIL")
+                                    .message(e.getMessage())
+                                    .results("")
+                                    .build()
+                    );
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.delivery.controller.transportOrder;
 
+import com.delivery.DTO.route.ResponseGetRoute;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
@@ -38,10 +39,19 @@ public class TransportOrderController {
         return deliveryInformationService.changeStatusDelivery(dInforId, currentStatus);
     }
 
+//    @GetMapping("/route")
+//    private String getRouteResolveTSP(List<String> deliveryAddressList){
+//        String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
+//        return mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
+//                placeTsp.replace(" ","+"),
+//                deliveryAddressList);
+//    }
+
+    //TEST
     @GetMapping("/route")
-    private String getRouteResolveTSP(List<String> deliveryAddressList){
+    private ResponseEntity<?> getRouteResolveTSP(List<String> deliveryAddressList){
         String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
-        return mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
+        return  mapService.getDirectionAndPositionWayPointer(placeTsp.replace(" ","+"),
                 placeTsp.replace(" ","+"),
                 deliveryAddressList);
     }

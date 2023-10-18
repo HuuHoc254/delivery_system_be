@@ -1,7 +1,6 @@
 package com.delivery.model.rawDataFromEcommerce;
 
 import lombok.*;
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -1,10 +1,10 @@
 package com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response;
 
+import com.delivery.DTO.user.response.DeliveryInformationServiceShipping;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import lombok.*;
 
 import java.util.List;
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 public class DeliveryInformationByDistrict {
     private String districtName;
-    private List<DeliveryInformation> deliveryInformationList;
+    private List<DeliveryInformationServiceShipping> deliveryInformationList;
 }

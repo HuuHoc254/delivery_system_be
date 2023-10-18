@@ -17,7 +17,7 @@ public class DeliveryInformationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String orderNumber;
+    private Integer orderNumber;
     private LocalDateTime orderDate;
     private String recipientName;
     private String deliveryAddress;

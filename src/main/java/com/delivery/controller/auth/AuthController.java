@@ -27,6 +27,11 @@ public class AuthController {
         return authService.login(loginDTO);
     }
 
+    @GetMapping("/{userName}")
+    public ResponseEntity<?> getUserInfo(@PathVariable(name = "userName") String userName){
+        return authService.getUserInfo(userName);
+    }
+
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return authService.refreshToken(refreshTokenRequest.getRefreshToken());

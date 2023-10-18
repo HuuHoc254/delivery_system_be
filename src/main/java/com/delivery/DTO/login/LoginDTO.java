@@ -1,8 +1,11 @@
 package com.delivery.DTO.login;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginDTO {
     private String account;
     private String password;

@@ -69,7 +69,7 @@ public class DeliveryInformationService implements IDeliveryInformationService {
     public List<DeliveryInformationByDistrict> groupDeliveryInformationByDistrict() {
         List<DeliveryInformationEntity> deliveryInformationList = deliveryInformationRepository
                 .findAllByStatusIs(EStatus.DELIVERING);
-        System.out.println("Size groub: "+deliveryInformationList.size());
+//        System.out.println("Size groub: "+deliveryInformationList.size());
         if(!deliveryInformationList.isEmpty()){
             Map<String, List<DeliveryInformation>> groupDeliveryInformation = new HashMap<>();
 

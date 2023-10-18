@@ -2,8 +2,10 @@ package com.delivery.service.auth.impl;
 
 import com.delivery.DTO.login.LoginDTO;
 import com.delivery.DTO.login.LoginResponse;
+import com.delivery.DTO.login.ResponseLogin;
 import com.delivery.DTO.refresh_token.RefreshTokenResponse;
 import com.delivery.DTO.register.RegisterDTO;
+import com.delivery.DTO.user.UserDTO;
 import com.delivery.entity.ERole;
 import com.delivery.entity.RefreshTokenEntity;
 import com.delivery.entity.RoleEntity;
@@ -14,6 +16,7 @@ import com.delivery.repository.UserRepository;
 import com.delivery.security.impl.UserDetailImpl;
 import com.delivery.service.auth.IAuthService;
 import com.delivery.util.JWTProvider;
+import com.delivery.util.ResponseData;
 import com.delivery.util.ResponseObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -65,13 +68,17 @@ public class AuthService implements IAuthService {
             String accessToken = jwtProvider.generateJwtToken(authentication);
             UserDetailImpl userDetail = (UserDetailImpl) authentication.getPrincipal();
             LoginResponse loginResponse = UserDetailImpl.convertAuthPrincipalToLoginResponse(userDetail);
-            loginResponse.setAccessToken(accessToken);
-            loginResponse.setRefreshToken(jwtProvider.createRefreshToken(userDetail.getId()).getRefreshToken());
+
+            ResponseLogin<LoginResponse> responseLogin = new ResponseLogin<>();
+            responseLogin.setData(loginResponse);
+            responseLogin.setAccessToken(accessToken);
+            responseLogin.setRefreshToken(jwtProvider.createRefreshToken(userDetail.getId()).getRefreshToken());
+
             return ResponseEntity.ok().body(ResponseObject
                     .builder()
                     .status("SUCCESS")
                     .message("Login Success !")
-                    .results(loginResponse)
+                    .results(responseLogin)
                     .build()
             );
         }catch (Exception e){
@@ -92,25 +99,29 @@ public class AuthService implements IAuthService {
     @Transactional
     public ResponseEntity<?> register(RegisterDTO registerDTO) {
         try {
+            if(!registerDTO.getPassword().equals(registerDTO.getRePassword())){
+                return ResponseEntity
+                        .badRequest()
+                        .body(
+                                ResponseObject
+                                        .builder()
+                                        .status("FAIL")
+                                        .message("Re-password not match")
+                                        .results("")
+                                        .build()
+                        );
+            }
+
             registerDTO.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-            Set<String> stringRoles = registerDTO.getRole();
+            RoleEntity userRole = roleRepository.findByName(ERole.ROLE_SHIPPER)
+                    .orElseThrow(() -> new RuntimeException("Role not found !"));
             Set<RoleEntity> roles = new HashSet<>();
-            stringRoles.forEach(role -> {
-                switch (role){
-                    case "ROLE_ADMIN":
-                        RoleEntity adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Role not found !"));
-                        roles.add(adminRole);
-                        break;
-                    default:
-                        RoleEntity userRole = roleRepository.findByName(ERole.ROLE_SHIPPER)
-                                .orElseThrow(() -> new RuntimeException("Role not found !"));
-                        roles.add(userRole);
-                }
-            });
+            roles.add(userRole);
             UserEntity newUser = mapper.map(registerDTO, UserEntity.class);
             newUser.setRoles(roles);
-            UserEntity userCreated =  userRepository.save(newUser);
+//            newUser.setStatus(true);
+
+            UserEntity userCreated = userRepository.save(newUser);
             return ResponseEntity
                     .ok()
                     .body(ResponseObject
@@ -188,6 +199,38 @@ public class AuthService implements IAuthService {
                             .builder()
                             .status("FAIL")
                             .message(e.getMessage()).results(""));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getUserInfo(String userName) {
+        try{
+            UserEntity userEntity = userRepository.findByUserName(userName)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            UserDTO userDTO = mapper.map(userEntity, UserDTO.class);
+            ResponseData<UserDTO> responseData = new ResponseData<>();
+            responseData.setData(userDTO);
+            return ResponseEntity
+                    .ok()
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("SUCCESS")
+                                    .message("Get user info success")
+                                    .results(responseData)
+                                    .build()
+                    );
+        }catch (Exception e){
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("FAIL")
+                                    .message(e.getMessage())
+                                    .results("")
+                                    .build()
+                    );
         }
     }
 }

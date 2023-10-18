@@ -9,4 +9,5 @@ public interface IAuthService {
     ResponseEntity<?> register(RegisterDTO registerDTO);
     ResponseEntity<?> refreshToken(String refreshToken);
     ResponseEntity<?> logout(Long user_id);
+    ResponseEntity<?> getUserInfo(String userName);
 }

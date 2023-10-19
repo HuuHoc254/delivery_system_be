@@ -4,7 +4,6 @@ import com.delivery.DTO.TransportOrderResponse;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.DeliveryInformationRequest;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.request.EcommerceChangeStatus;
 import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationByDistrict;
-import com.delivery.DTO.rawDataFromEcommerce.deliveryInformation.response.DeliveryInformationResponse;
 import com.delivery.DTO.user.response.DeliveryInformationServiceShipping;
 import com.delivery.entity.DeliveryInformationEntity;
 import com.delivery.entity.EStatus;
@@ -294,6 +293,54 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                                     .message("Change Status Success")
                                     .build()
                     );
+        }catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(404))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("FAIL")
+                                    .message(e.getMessage())
+                                    .results("")
+                                    .build()
+                    );
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getTransportOrderUnFinished(Long shipperId) {
+        try {
+            if(!userRepository.existsById(shipperId)){
+                return ResponseEntity
+                        .status(HttpStatusCode.valueOf(200))
+                        .body(
+                                ResponseObject
+                                        .builder()
+                                        .status("NO-CONTENT")
+                                        .message("Shipper Not Exist")
+                                        .build()
+                        );
+            }
+            List<DeliveryInformationEntity> deliveryInformationEntities =
+                    deliveryInformationRepository.findTransportOrdersUnFinishedByShipperId(shipperId);
+
+            List<DeliveryInformation> deliveryInformations = deliveryInformationEntities.stream()
+                    .map(deliveryInformationEntity -> modelMapper.map(deliveryInformationEntity,DeliveryInformation.class)).toList();
+
+            TransportOrderResponse<List<DeliveryInformation>> transportOrderResponse = new TransportOrderResponse<>();
+            transportOrderResponse.setData(deliveryInformations);
+
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(200))
+                    .body(
+                            ResponseObject
+                                    .builder()
+                                    .status("SUCCESS")
+                                    .message("Get TransportOrders UnFinished")
+                                    .results(transportOrderResponse)
+                                    .build()
+                    );
+
         }catch (Exception e){
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(404))

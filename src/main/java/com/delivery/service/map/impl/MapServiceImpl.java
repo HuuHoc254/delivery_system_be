@@ -6,6 +6,8 @@ import com.delivery.DTO.route.WaypointMarker;
 import com.delivery.model.geocoding.ResponseApi;
 import com.delivery.service.map.IMapService;
 import com.delivery.util.ResponseObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,7 @@ public class MapServiceImpl implements IMapService {
     }
 
     @Override
-    public Object getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
+    public String getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
         StringBuilder points = new StringBuilder();
         for(String s : deliveryAddressList){
             s = s.trim();
@@ -56,6 +58,8 @@ public class MapServiceImpl implements IMapService {
                                                                String destination,
                                                                List<String> deliveryAddressList) {
 
+        String resultDirection = this.getRouteResolveTSP(original,destination,deliveryAddressList);
+
         try {
             List<WaypointMarker> waypointMarkers = new ArrayList<>();
             //Get Location's WayPointer-address
@@ -73,9 +77,13 @@ public class MapServiceImpl implements IMapService {
                         .visible(true)
                         .build());
             }
+
+            Gson json = new Gson();
+
+            String jsonResponse = json.toJson(resultDirection);
             ResponseGetRoute responseGetRoute = ResponseGetRoute
                     .builder()
-                    .resultDirection(this.getRouteResolveTSP(original,destination,deliveryAddressList))
+                    .resultDirection(jsonResponse)
                     .waypointMarker(waypointMarkers)
                     .build();
 

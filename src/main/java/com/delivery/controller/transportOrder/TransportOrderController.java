@@ -39,8 +39,8 @@ public class TransportOrderController {
         return deliveryInformationService.changeStatusDelivery(dInforId, currentStatus);
     }
 
-//    @GetMapping("/route")
-//    private String getRouteResolveTSP(List<String> deliveryAddressList){
+//    @PostMapping("/route")
+//    private String getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
 //        String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
 //        return mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
 //                placeTsp.replace(" ","+"),

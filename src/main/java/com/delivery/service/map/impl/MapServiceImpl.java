@@ -50,7 +50,10 @@ public class MapServiceImpl implements IMapService {
         String routeApiUrl = "http://api.map4d.vn/sdk/route?key="+apiKey+"&origin="+original+
                 "&destination="+destination+"&points="+points+"&mode=motorcycle"+"&optimize=True";
         System.out.println(routeApiUrl);
-        return restTemplate.getForObject(routeApiUrl, String.class);
+
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(routeApiUrl, String.class);
+        String responseBody = responseEntity.getBody();
+        return responseBody;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class MapServiceImpl implements IMapService {
                                                                String destination,
                                                                List<String> deliveryAddressList) {
 
-        String resultDirection = this.getRouteResolveTSP(original,destination,deliveryAddressList);
+       String  resultDirection = this.getRouteResolveTSP(original,destination,deliveryAddressList);
 
         try {
             List<WaypointMarker> waypointMarkers = new ArrayList<>();
@@ -77,13 +80,9 @@ public class MapServiceImpl implements IMapService {
                         .visible(true)
                         .build());
             }
-
-            Gson json = new Gson();
-
-            String jsonResponse = json.toJson(resultDirection);
             ResponseGetRoute responseGetRoute = ResponseGetRoute
                     .builder()
-                    .resultDirection(jsonResponse)
+                    .resultDirection(resultDirection)
                     .waypointMarker(waypointMarkers)
                     .build();
 

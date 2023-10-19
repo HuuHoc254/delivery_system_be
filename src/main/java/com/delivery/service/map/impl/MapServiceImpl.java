@@ -37,7 +37,7 @@ public class MapServiceImpl implements IMapService {
     }
 
     @Override
-    public String getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
+    public Object getRouteResolveTSP(String original, String destination, List<String> deliveryAddressList) {
         StringBuilder points = new StringBuilder();
         for(String s : deliveryAddressList){
             s = s.trim();
@@ -57,9 +57,6 @@ public class MapServiceImpl implements IMapService {
                                                                List<String> deliveryAddressList) {
 
         try {
-
-            String resultDirection = this.getRouteResolveTSP(original,destination,deliveryAddressList);
-
             List<WaypointMarker> waypointMarkers = new ArrayList<>();
             //Get Location's WayPointer-address
             for(String deliveryAddress : deliveryAddressList){
@@ -78,7 +75,7 @@ public class MapServiceImpl implements IMapService {
             }
             ResponseGetRoute responseGetRoute = ResponseGetRoute
                     .builder()
-                    .resultDirection(resultDirection)
+                    .resultDirection(this.getRouteResolveTSP(original,destination,deliveryAddressList))
                     .waypointMarker(waypointMarkers)
                     .build();
 

@@ -20,4 +20,5 @@ public interface IDeliveryInformationService {
     ResponseEntity<?> getTransportOrderByShipper(Long shipperId, List<DeliveryInformation> deliveryInformationList);
 //    ResponseRouteApi testRoute();
     ResponseEntity<?> changeStatusDelivery(Long deliveryInformationId, Boolean currentStatus);
+    ResponseEntity<?> getTransportOrderUnFinished(Long shipperId);
 }

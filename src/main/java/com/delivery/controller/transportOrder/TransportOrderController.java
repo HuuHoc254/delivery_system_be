@@ -48,12 +48,16 @@ public class TransportOrderController {
 //    }
 
     //TEST
-    @GetMapping("/route")
-    private ResponseEntity<?> getRouteResolveTSP(List<String> deliveryAddressList){
+    @PostMapping("/route")
+    private ResponseEntity<?> getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
         String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
         return  mapService.getDirectionAndPositionWayPointer(placeTsp.replace(" ","+"),
                 placeTsp.replace(" ","+"),
                 deliveryAddressList);
+    }
+    @GetMapping("shipper/{shipperId}/unfinished")
+    private ResponseEntity<?> getTransportOrderUnFinished(@PathVariable Long shipperId){
+        return deliveryInformationService.getTransportOrderUnFinished(shipperId);
     }
 
 }

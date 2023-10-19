@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 @Builder
 public class ResponseGetRoute {
-    private String resultDirection;
+    private Object resultDirection;
     private List<WaypointMarker> waypointMarker;
 }

@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class DataResponse <T>{
+public class DataResponse <T,k>{
     private T data;
+    private k data2;
 }

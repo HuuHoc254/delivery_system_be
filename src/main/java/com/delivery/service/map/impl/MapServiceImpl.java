@@ -80,14 +80,15 @@ public class MapServiceImpl implements IMapService {
                         .visible(true)
                         .build());
             }
-            ResponseGetRoute responseGetRoute = ResponseGetRoute
-                    .builder()
-                    .resultDirection(resultDirection)
-                    .waypointMarker(waypointMarkers)
-                    .build();
+//            ResponseGetRoute responseGetRoute = ResponseGetRoute
+//                    .builder()
+//                    .resultDirection(resultDirection)
+//                    .waypointMarker(waypointMarkers)
+//                    .build();
 
-            DataResponse<ResponseGetRoute> dataResponse = new DataResponse<>();
-            dataResponse.setData(responseGetRoute);
+            DataResponse<String,List<WaypointMarker>> dataResponse = new DataResponse<>();
+            dataResponse.setData(resultDirection);
+            dataResponse.setData2(waypointMarkers);
 
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(200))

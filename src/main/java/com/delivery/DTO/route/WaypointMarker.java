@@ -9,9 +9,9 @@ import lombok.*;
 @Setter
 @Builder
 public class WaypointMarker {
-    private Location location;
+    private Location position;
     private String title;
-    private boolean draggable;
-    private boolean visible;
-    private String iconView;
+//    private boolean draggable;
+//    private boolean visible;
+//    private String iconView;
 }

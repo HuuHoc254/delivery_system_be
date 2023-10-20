@@ -45,11 +45,11 @@ public class MapServiceImpl implements IMapService {
             s = s.trim();
             points.append(s.replace(" ", "%").concat(";"));
         }
-        System.out.println(points);
+//        System.out.println(points);
 
         String routeApiUrl = "http://api.map4d.vn/sdk/route?key="+apiKey+"&origin="+original+
                 "&destination="+destination+"&points="+points+"&mode=motorcycle"+"&optimize=True";
-        System.out.println(routeApiUrl);
+//        System.out.println(routeApiUrl);
 
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(routeApiUrl, String.class);
         String responseBody = responseEntity.getBody();
@@ -74,10 +74,10 @@ public class MapServiceImpl implements IMapService {
                 String address = splitAddress[0].trim();
 
                 waypointMarkers.add(WaypointMarker.builder()
-                        .location(responseGeocoding.getResult().get(0).getLocation())
+                        .position(responseGeocoding.getResult().get(0).getLocation())
                         .title(address)
-                        .draggable(true)
-                        .visible(true)
+//                        .draggable(true)
+//                        .visible(true)
                         .build());
             }
 //            ResponseGetRoute responseGetRoute = ResponseGetRoute
@@ -86,7 +86,7 @@ public class MapServiceImpl implements IMapService {
 //                    .waypointMarker(waypointMarkers)
 //                    .build();
 
-            DataResponse<String,List<WaypointMarker>> dataResponse = new DataResponse<>();
+            DataResponse<Object,List<WaypointMarker>> dataResponse = new DataResponse<>();
             dataResponse.setData(resultDirection);
             dataResponse.setData2(waypointMarkers);
 

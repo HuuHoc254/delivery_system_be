@@ -1,9 +1,12 @@
 package com.delivery.model.geocoding;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Location {
-    private Double lng;
     private Double lat;
+    private Double lng;
 }

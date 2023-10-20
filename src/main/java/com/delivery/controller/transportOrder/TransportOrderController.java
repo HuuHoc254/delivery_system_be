@@ -1,6 +1,7 @@
 package com.delivery.controller.transportOrder;
 
 import com.delivery.DTO.route.ResponseGetRoute;
+import com.delivery.DTO.status.ChangeStatusRequest;
 import com.delivery.model.rawDataFromEcommerce.DeliveryInformation;
 import com.delivery.service.deliveryInformation.IDeliveryInformationService;
 import com.delivery.service.map.IMapService;
@@ -35,8 +36,8 @@ public class TransportOrderController {
 
     @PatchMapping("/shipping/{dInforId}/status")
     private ResponseEntity<?> changeDeliveryStatus(@PathVariable Long dInforId,
-                                                           @RequestBody Boolean currentStatus){
-        return deliveryInformationService.changeStatusDelivery(dInforId, currentStatus);
+                                                   @RequestBody ChangeStatusRequest changeStatusRequest){
+        return deliveryInformationService.changeStatusDelivery(dInforId, changeStatusRequest.getCurrentStatus());
     }
 
 //    @PostMapping("/route")

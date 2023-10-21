@@ -55,7 +55,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("https://super-deliverry.vercel.app/")
+                        .allowedOrigins("https://super-deliverry.vercel.app/","http://127.0.0.1:4000/")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }

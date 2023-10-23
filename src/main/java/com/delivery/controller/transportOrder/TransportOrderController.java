@@ -40,25 +40,25 @@ public class TransportOrderController {
         return deliveryInformationService.changeStatusDelivery(dInforId, changeStatusRequest.getCurrentStatus());
     }
 
-//    @PostMapping("/route")
-//    private String getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
-//        String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
-//        return mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
-//                placeTsp.replace(" ","+"),
-//                deliveryAddressList);
-//    }
-
-    //TEST
     @PostMapping("/route")
-    private ResponseEntity<?> getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
+    private String getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
         String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
-        return  mapService.getDirectionAndPositionWayPointer(placeTsp.replace(" ","+"),
+        return mapService.getRouteResolveTSP(placeTsp.replace(" ","+"),
                 placeTsp.replace(" ","+"),
                 deliveryAddressList);
     }
-    @GetMapping("shipper/{shipperId}/unfinished")
-    private ResponseEntity<?> getTransportOrderUnFinished(@PathVariable Long shipperId){
-        return deliveryInformationService.getTransportOrderUnFinished(shipperId);
-    }
+
+    //TEST
+//    @PostMapping("/route")
+//    private ResponseEntity<?> getRouteResolveTSP(@RequestBody List<String> deliveryAddressList){
+//        String placeTsp = "92 Quang Trung, Hải Châu, TP Đà Nẵng";
+//        return  mapService.getDirectionAndPositionWayPointer(placeTsp.replace(" ","+"),
+//                placeTsp.replace(" ","+"),
+//                deliveryAddressList);
+//    }
+//    @GetMapping("shipper/{shipperId}/unfinished")
+//    private ResponseEntity<?> getTransportOrderUnFinished(@PathVariable Long shipperId){
+//        return deliveryInformationService.getTransportOrderUnFinished(shipperId);
+//    }
 
 }

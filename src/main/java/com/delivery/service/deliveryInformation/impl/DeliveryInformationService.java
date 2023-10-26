@@ -263,8 +263,10 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 //Send Mail To User
-                String message = "Thank you for your trust and the opportunity for us to serve you.\\n%s\\n" +
-                        "Please click on the link below to rate product's quality:";
+                String message = """
+                        Thank you for your trust and the opportunity for us to serve you.
+
+                        Please click on the link below to rate product's quality:""";
                 emailService.sendEmail(deliveryInformationEntity.getEmail(),"Completed The Order", message);
             }else{
                 deliveryInformationEntity.setStatus(EStatus.DELIVERY_FAILED);
@@ -278,8 +280,10 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                         .build();
                 restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
-                String message = "Thanks for your interest in our products.\\n%s\\n" +
-                        "To purchase next time, please click on the link:";
+                String message = """
+                        Thanks for your interest in our products.
+
+                        To purchase next time, please click on the link:""";
                 emailService.sendEmail(deliveryInformationEntity.getEmail(),"Fail The Order", message);
             }
             deliveryInformationRepository.save(deliveryInformationEntity);

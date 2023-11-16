@@ -266,7 +266,8 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 String message = """
                         Thank you for your trust and the opportunity for us to serve you.
 
-                        Please click on the link below to rate product's quality:""";
+                        Please click on the link below to rate product's quality:
+                        https://super-store-hmh.vercel.app/customer/purchase/completed""";
                 emailService.sendEmail(deliveryInformationEntity.getEmail(),"Completed The Order", message);
             }else{
                 deliveryInformationEntity.setStatus(EStatus.DELIVERY_FAILED);
@@ -283,7 +284,7 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 String message = """
                         Thanks for your interest in our products.
 
-                        To purchase next time, please click on the link:""";
+                        To purchase next time, please click on the link:https://super-store-hmh.vercel.app/""";
                 emailService.sendEmail(deliveryInformationEntity.getEmail(),"Fail The Order", message);
             }
             deliveryInformationRepository.save(deliveryInformationEntity);

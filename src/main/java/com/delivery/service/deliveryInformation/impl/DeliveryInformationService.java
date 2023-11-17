@@ -254,13 +254,13 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
 
                 //Call-Api change status Order E-commerce
-                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
-                        .builder()
-                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
-                        .orderNumber(deliveryInformationEntity.getOrderNumber())
-                        .status(Boolean.TRUE)
-                        .build();
-                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
+//                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+//                        .builder()
+//                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+//                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+//                        .status(Boolean.TRUE)
+//                        .build();
+//                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 //Send Mail To User
                 String message = """

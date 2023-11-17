@@ -56,9 +56,9 @@ public class TransportOrderController {
 //                placeTsp.replace(" ","+"),
 //                deliveryAddressList);
 //    }
-//    @GetMapping("shipper/{shipperId}/unfinished")
-//    private ResponseEntity<?> getTransportOrderUnFinished(@PathVariable Long shipperId){
-//        return deliveryInformationService.getTransportOrderUnFinished(shipperId);
-//    }
+    @GetMapping("shipper/{shipperId}/unfinished")
+    private ResponseEntity<?> getTransportOrderUnFinished(@PathVariable Long shipperId){
+        return deliveryInformationService.getTransportOrderUnFinished(shipperId);
+    }
 
 }

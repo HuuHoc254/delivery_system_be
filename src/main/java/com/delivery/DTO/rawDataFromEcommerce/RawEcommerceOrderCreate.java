@@ -1,16 +1,14 @@
 package com.delivery.DTO.rawDataFromEcommerce;
 
 import com.delivery.DTO.rawDataFromEcommerce.rawEcommerceOrder.request.RawEcommerceRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class RawEcommerceOrderCreate {
     private List<RawEcommerceRequest> rawEcommerceRequestList;

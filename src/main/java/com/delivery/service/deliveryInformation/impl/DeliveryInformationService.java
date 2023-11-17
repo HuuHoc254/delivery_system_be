@@ -248,7 +248,7 @@ public class DeliveryInformationService implements IDeliveryInformationService {
         try{
             DeliveryInformationEntity deliveryInformationEntity = deliveryInformationRepository.findById(deliveryInformationId)
                     .orElseThrow(NoSuchElementException::new);
-            String baseEcommerceURL = "http://192.168.110.88:8080/api/v1/public/order/delivery-request";
+            String baseEcommerceURL = "https://superstorehmh-production.up.railway.app/api/v1/public/order/delivery-request";
             if(currentStatus){
                 deliveryInformationEntity.setStatus(EStatus.DELIVERED_SUCCESSFULLY);
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());

@@ -5,7 +5,6 @@ import lombok.*;
 
 @Entity
 @Table(name = "pickup_information")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

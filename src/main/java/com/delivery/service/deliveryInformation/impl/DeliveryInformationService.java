@@ -273,13 +273,13 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 deliveryInformationEntity.setStatus(EStatus.DELIVERY_FAILED);
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
 
-                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
-                        .builder()
-                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
-                        .orderNumber(deliveryInformationEntity.getOrderNumber())
-                        .status(Boolean.FALSE)
-                        .build();
-                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
+//                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+//                        .builder()
+//                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+//                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+//                        .status(Boolean.FALSE)
+//                        .build();
+//                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 String message = """
                         Thanks for your interest in our products.

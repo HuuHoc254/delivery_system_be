@@ -22,7 +22,7 @@ public class DeliveryInformation {
     private String email;
     private LocalDateTime noteTimeRecipient;
     //Note
-    private RawEcommerceOrder rawEcommerceOrder;
+//    private RawEcommerceOrder rawEcommerceOrder;
     private EStatus status;
     private LocalDateTime deliveryDate;
     @JsonIgnore

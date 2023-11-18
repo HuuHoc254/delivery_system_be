@@ -200,7 +200,16 @@ public class DeliveryInformationService implements IDeliveryInformationService {
             if(!deliveryInformationList.isEmpty()){
                 UserEntity shipper = userRepository.findById(shipperId)
                         .orElseThrow(NoSuchElementException::new);
-                List<DeliveryInformationEntity> deliveryInformationEntities = deliveryInformationList
+                //Fix
+                List<DeliveryInformationEntity> listInforentity = new ArrayList<>();
+                for(DeliveryInformation s : deliveryInformationList){
+                    DeliveryInformationEntity informationEntity = deliveryInformationRepository.findById(s.getId())
+                            .orElseThrow(NoSuchElementException::new);
+                    listInforentity.add(informationEntity);
+                }
+
+                //Fix2
+                List<DeliveryInformationEntity> deliveryInformationEntities = listInforentity
                         .stream()
                         .map(deliveryInformation -> {
                             deliveryInformation.setShipper(shipper);
@@ -254,13 +263,13 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
 
                 //Call-Api change status Order E-commerce
-//                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
-//                        .builder()
-//                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
-//                        .orderNumber(deliveryInformationEntity.getOrderNumber())
-//                        .status(Boolean.TRUE)
-//                        .build();
-//                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
+                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+                        .builder()
+                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+                        .status(Boolean.TRUE)
+                        .build();
+                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 //Send Mail To User
                 String message = """
@@ -273,13 +282,13 @@ public class DeliveryInformationService implements IDeliveryInformationService {
                 deliveryInformationEntity.setStatus(EStatus.DELIVERY_FAILED);
                 deliveryInformationEntity.setDeliveryDate(LocalDateTime.now());
 
-//                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
-//                        .builder()
-//                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
-//                        .orderNumber(deliveryInformationEntity.getOrderNumber())
-//                        .status(Boolean.FALSE)
-//                        .build();
-//                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
+                EcommerceChangeStatus ecommerceChangeStatus = EcommerceChangeStatus
+                        .builder()
+                        .sellerId(deliveryInformationEntity.getRawEcommerceOrder().getPickupInformation().getShopId())
+                        .orderNumber(deliveryInformationEntity.getOrderNumber())
+                        .status(Boolean.FALSE)
+                        .build();
+                restTemplate.postForObject(baseEcommerceURL,ecommerceChangeStatus, Objects.class);
 
                 String message = """
                         Thanks for your interest in our products.
